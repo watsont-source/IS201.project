@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Bubble Risk Simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #f5f7fa;
+            color: #1f2933;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 40px auto;
+            padding: 24px;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        .value {
+            font-size: 14px;
+            color: #475569;
+        }
+
+        button {
+            margin-top: 28px;
+            padding: 10px 18px;
+            font-size: 16px;
+            background-color: #1c2a3a;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2f5fa7;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 16px;
+            background-color: #f1f5f9;
+            border-left: 4px solid #2f5fa7;
+        }
+
+        .low { border-left-color: #16a34a; }
+        .medium { border-left-color: #ca8a04; }
+        .high { border-left-color: #dc2626; }
+
+        a {
+            display: block;
+            margin-top: 28px;
+            text-align: center;
+            color: #2f5fa7;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>AI Bubble Risk Simulator</h1>
+
+        <p>
+            This interactive model estimates speculative risk in the artificial intelligence
+            sector using simplified market indicators. The output is for educational purposes
+            and does not represent financial advice.
+        </p>
+
+        <label for="hype">Market Hype Level</label>
+        <input type="range" id="hype" min="0" max="100" value="50">
+        <div class="value" id="hypeVal">50</div>
+
+        <label for="revenue">Revenue Growth Strength</label>
+        <input type="range" id="revenue" min="0" max="100" value="50">
+        <div class="value" id="revenueVal">50</div>
+
+        <label for="cost">Infrastructure Cost Pressure</label>
+        <input type="range" id="cost" min="0" max="100" value="50">
+        <div class="value" id="costVal">50</div>
+
+        <label for="adoption">Enterprise Adoption Rate</label>
+        <input type="range" id="adoption" min="0" max="100" value="50">
+        <div class="value" id="adoptionVal">50</div>
+
+        <button id="calcBtn">Calculate Bubble Risk</button>
+
+        <div class="result" id="result">
+            Adjust the sliders and click the button to view the estimated risk score.
+        </div>
+
+        <a href="../scratch.html">Back to Scratch Page</a>
+    </div>
+
+    <script>
+        
+        const sliders = [
+            { id: 'hype', out: 'hypeVal' },
+            { id: 'revenue', out: 'revenueVal' },
+            { id: 'cost', out: 'costVal' },
+            { id: 'adoption', out: 'adoptionVal' }
+        ];
+
+        sliders.forEach(s => {
+            const slider = document.getElementById(s.id);
+            const output = document.getElementById(s.out);
+            output.textContent = slider.value;
+            slider.addEventListener('input', () => {
+                output.textContent = slider.value;
+            });
+        });
+
+        
+        document.getElementById('calcBtn').addEventListener('click', function () {
+            const hype = parseInt(document.getElementById('hype').value, 10);
+            const revenue = parseInt(document.getElementById('revenue').value, 10);
+            const cost = parseInt(document.getElementById('cost').value, 10);
+            const adoption = parseInt(document.getElementById('adoption').value, 10);
+
+            const riskScore = Math.round(
+                (hype * 0.35) +
+                ((100 - revenue) * 0.25) +
+                (cost * 0.2) +
+                ((100 - adoption) * 0.2)
+            );
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.remove('low', 'medium', 'high');
+
+            let message = '';
+            let level = '';
+
+            if (riskScore < 35) {
+                message = 'Low speculative risk. Indicators suggest relatively stable market conditions.';
+                level = 'low';
+            } else if (riskScore < 65) {
+                message = 'Moderate speculative risk. Valuations may be outpacing fundamentals.';
+                level = 'medium';
+            } else {
+                message = 'High speculative risk. Market behavior resembles historical asset bubbles.';
+                level = 'high';
+            }
+
+            resultDiv.classList.add(level);
+            resultDiv.innerHTML = '<strong>Bubble Risk Score:</strong> ' + riskScore + '/100<br><br>' + message;
+        });
+    </script>
+
+</body>
+</html>
